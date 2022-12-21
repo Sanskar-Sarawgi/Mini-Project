@@ -2,6 +2,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+size_t Abstract_Data(char *buffer,size_t itemsize,size_t nitems,void* ignorethis){
+    size_t bytes = itemsize*nitems;
+    int block = 0;
+    for(int i=0;i<bytes;i++){
+        if('<' == buffer[i] ) block = 1; 
+        if(!block) printf("%c",buffer[i]);
+        if('>' == buffer[i]) block = 0;
+    }
+    return bytes;
+}
+
 int main(){
     CURL *curl = curl_easy_init();
 
@@ -12,6 +23,7 @@ int main(){
 
     // set options it is a type of middleware
     curl_easy_setopt(curl,CURLOPT_URL,"http://www-db.deis.unibo.it/courses/TW/DOCS/w3schools/website/customers.html");
+    curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,Abstract_Data);
 
 
     //perform out action
