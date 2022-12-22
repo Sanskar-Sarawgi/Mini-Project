@@ -35,3 +35,5 @@ int main(){
     curl_easy_cleanup(curl);
     return 0;
 }
+
+// gcc  Curl_demo.c -lcurl
