@@ -112,15 +112,14 @@ void Remove_Tag(){
 	FILE *out_file = fopen("Contant.html", "w");
 
 	int temp;
-	int block = 0;
+	int block = 1;
 	do {
         temp = fgetc(in_file);
         if(temp == '<') block = 1;
 		else if(temp == '>') block = 0;
 		else{
 			if(!block) fputc(temp,out_file);
-		} 
-
+		}
         // Checking if character is not EOF.
         // If it is EOF stop reading.
     } while (temp != EOF);
