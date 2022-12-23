@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include "string.h"
 #include "stdlib.h"
+#include<unistd.h>
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1
@@ -14,10 +15,6 @@
 #define NULL '\0'
 #endif
 
-struct Page_detail{
-	int header_size;
-	int Body_size;
-};
 
 // converting domain name to ip address
 char* Domain_to_ip(char* Domain_name){
@@ -75,7 +72,7 @@ void Send_url_request(char *Domain_name,int sockfd){
 	// creating header to send request to the server
 	// GET / HTTP/1.1
 	// Host: Domain_name
-	snprintf(header, Header_SIZE, "GET / HTTP/1.1\r\nHost: %s\r\n\r\n", Domain_name);
+	snprintf(header, Header_SIZE, "GET / HTTP/1.0\r\nHost: %s\r\n\r\n", Domain_name);
 	printf("Header - %s\n", header);
 
 	// sending request to server
@@ -85,62 +82,48 @@ void Send_url_request(char *Domain_name,int sockfd){
 	}
 }
 
-int is_digit(char ch){
-	if(ch >= '0' && ch <= '9') return 1;
-	return 0;
-}
 
-struct Page_detail check_content_len(char *buf,int buf_len){
-	int i = 0;
-	struct Page_detail detail;
-	int length = 0;
-	int header_length = 0;
-	while(i < buf_len){
-		header_length++;
-		if(buf[i] == 'C'){
-			char *t = "Content-Length: ";
-			int j = 0;
-
-			// checking the word is matching or not
-			while(buf[i++] == t[j++] && j < 17);
-
-			// extracting the number from the digit
-			if(j == 17){
-				i--;
-				while(is_digit(buf[i])){
-					length = length*10 + (buf[i]-'0');
-					i++;
-				}
-				detail.Body_size = length+header_length;
-				detail.header_size = header_length;
-				return detail;
-			}
-		}else i++;
-	}
-	return detail;
-}
-
-char *Recv_HTML(int sockfd){
+void Recv_HTML(int sockfd){
 	char *buf;
 	buf = (char *) malloc(BUF_SIZE_INC * sizeof(char));
 
 	memset(buf, 0, BUF_SIZE_INC);
 	ssize_t bytes_received = recv(sockfd, buf, BUF_SIZE, 0);
-	
-	struct Page_detail detail = check_content_len(buf,bytes_received);
-	int Total_data_size = detail.Body_size;
-	int Current_data_size = 0;
 
-	while(bytes_received && bytes_received != 0){
-		buf[bytes_received] = 0;
-		Current_data_size += bytes_received;
-		printf("%s \n",buf);
+	// open the file to store the html page
+	FILE *out_file = fopen("Html_Page.html", "w");
+
+	// getting datapackge
+	while(bytes_received > 0){
+		buf[bytes_received] = '\0';
+		
+		fprintf(out_file, "%s", buf);
 		memset(buf, 0, BUF_SIZE_INC);
-		if(Total_data_size < Current_data_size) break;
 		bytes_received = recv(sockfd, buf, BUF_SIZE, 0);
 	}
-	// /0/0/0/0 to end the loop
-	return NULL;
+
+	// close file stream
+	fclose(out_file);
+}
+
+void Remove_Tag(){
+	// Opening file in reading mode
+    FILE *in_file = fopen("Html_Page.html", "r");
+	FILE *out_file = fopen("Contant.html", "w");
+
+	int temp;
+	int block = 0;
+	do {
+        temp = fgetc(in_file);
+        if(temp == '<') block = 1;
+		else if(temp == '>') block = 0;
+		else{
+			if(!block) fputc(temp,out_file);
+		} 
+
+        // Checking if character is not EOF.
+        // If it is EOF stop reading.
+    } while (temp != EOF);
 }
 
 int main(int argc,char **argv){
@@ -168,7 +151,8 @@ int main(int argc,char **argv){
 	// fetching html from server
 	Recv_HTML(sockfd);
 
-   
+	Remove_Tag();
+
 	return 0;
 }
 
