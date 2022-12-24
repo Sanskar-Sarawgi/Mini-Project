@@ -87,9 +87,9 @@ void *Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
     }
 }
 
-int main(){
-    Trie* node = Build_Trie("test.txt");
-    char word[50];
-    Frequence_Of_Word("./Result/output.txt",node,word,-1);
-    return 0;
-}
+// int main(){
+//     Trie* node = Build_Trie("test.txt");
+//     char word[50];
+//     Frequence_Of_Word("./Result/output.txt",node,word,-1);
+//     return 0;
+// }

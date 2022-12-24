@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "Trie.h"
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1
@@ -125,6 +126,16 @@ void Remove_Tag(){
         // Checking if character is not EOF.
         // If it is EOF stop reading.
     } while (temp != EOF);
+	// close file stream
+	fclose(out_file);
+	fclose(in_file);
+}
+
+void Find_freq(){
+
+	Trie* node = Build_Trie("./Result/Contant.txt");
+    Frequence_Of_Word("./Result/output.txt",node,(char *)calloc(50,sizeof(char)),-1);
+
 }
 
 int main(int argc,char **argv){
@@ -155,8 +166,11 @@ int main(int argc,char **argv){
 	// fetching html from server
 	Recv_HTML(sockfd);
 
+	// Extracting the data from html page
 	Remove_Tag();
 
+	// finding the frequency of each word
+	Find_freq();
 	return 0;
 }
 
