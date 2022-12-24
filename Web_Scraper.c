@@ -5,7 +5,9 @@
 #include <arpa/inet.h>
 #include "string.h"
 #include "stdlib.h"
-#include<unistd.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1
@@ -132,6 +134,9 @@ int main(int argc,char **argv){
 		printf("Plese enter domain name...");
         return -1;
 	}
+
+	// init of the Result folder
+	int check = mkdir("Result",0777);
 
 	char* Domain_name = argv[1];
 
