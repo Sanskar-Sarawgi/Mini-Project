@@ -64,6 +64,8 @@ Trie *Build_Trie(char *File_Name){
         // Checking if character is not EOF.
         // If it is EOF stop reading.
     }while (temp != EOF);
+
+    return Node;
 }
 
 void *Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
@@ -88,6 +90,6 @@ void *Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
 int main(){
     Trie* node = Build_Trie("test.txt");
     char word[50];
-    Frequence_Of_Word("output.txt",node,word,-1);
+    Frequence_Of_Word("./Result/output.txt",node,word,-1);
     return 0;
 }

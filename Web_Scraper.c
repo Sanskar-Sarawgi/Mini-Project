@@ -91,7 +91,7 @@ void Recv_HTML(int sockfd){
 	ssize_t bytes_received = recv(sockfd, buf, BUF_SIZE, 0);
 
 	// open the file to store the html page
-	FILE *out_file = fopen("Html_Page.html", "w");
+	FILE *out_file = fopen("./Result/Html_Page.html", "w");
 
 	// getting datapackge
 	while(bytes_received > 0){
@@ -108,8 +108,8 @@ void Recv_HTML(int sockfd){
 
 void Remove_Tag(){
 	// Opening file in reading mode
-    FILE *in_file = fopen("Html_Page.html", "r");
-	FILE *out_file = fopen("Contant.html", "w");
+    FILE *in_file = fopen("./Result/Html_Page.html", "r");
+	FILE *out_file = fopen("./Result/Contant.txt", "w");
 
 	int temp;
 	int block = 1;
