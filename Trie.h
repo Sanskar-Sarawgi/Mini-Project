@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_CHAR 26
+#define WORD_SIZE 20
 
 typedef struct Trie
 {
@@ -52,14 +53,18 @@ Trie *Build_Trie(char *File_Name){
     int temp;
     Trie *Node = NULL;
     do {
-        char word[20];
+        char word[WORD_SIZE+4];
         int len = 0;
         temp = fgetc(in_file);
         while(is_char(temp)){
             word[len++] = temp;
-            temp = fgetc(in_file);   
+            if(len > WORD_SIZE) break;   // limit the word size
+            temp = fgetc(in_file);
         }
+        
+        if(len > WORD_SIZE) continue;
         word[len] = '\0';
+
         if(len > 0) Node = Insert(Node,word,len);
         // Checking if character is not EOF.
         // If it is EOF stop reading.
@@ -68,28 +73,30 @@ Trie *Build_Trie(char *File_Name){
     return Node;
 }
 
-void *Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
+int Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
     static FILE *out_file;
+    static int counter = 0;
     if(out_file == NULL) out_file = fopen(File_Name, "w");
     
-    
+    if(!head) return 0;
     if(head->count > 0){
         fprintf(out_file,"%s = %d \n",word,head->count);
+        counter++;
     }
     for(int i=0;i<MAX_CHAR;i++){
         if(head->node_list[i]){
-            
             word[index+1] = 'a'+i;
             word[index+2] = '\0';
             Frequence_Of_Word(File_Name,head->node_list[i],word,index+1);
             word[index+1] = '\0';
         }
     }
+    return counter;
 }
 
-// int main(){
-//     Trie* node = Build_Trie("test.txt");
-//     char word[50];
-//     Frequence_Of_Word("./Result/output.txt",node,word,-1);
-//     return 0;
-// }
+int Find_freq(char *Contant_file){
+
+	Trie* node = Build_Trie(Contant_file);
+    return Frequence_Of_Word("./Result/output.txt",node,(char *)calloc(50,sizeof(char)),-1);
+
+}

@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "Trie.h"
+#include "Filter.h"
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1
@@ -109,34 +110,7 @@ void Recv_HTML(int sockfd){
 	fclose(out_file);
 }
 
-void Remove_Tag(){
-	// Opening file in reading mode
-    FILE *in_file = fopen("./Result/Html_Page.html", "r");
-	FILE *out_file = fopen("./Result/Contant.txt", "w");
 
-	int temp;
-	int block = 1;
-	do {
-        temp = fgetc(in_file);
-        if(temp == '<') block = 1;
-		else if(temp == '>') block = 0;
-		else{
-			if(!block) fputc(temp,out_file);
-		}
-        // Checking if character is not EOF.
-        // If it is EOF stop reading.
-    } while (temp != EOF);
-	// close file stream
-	fclose(out_file);
-	fclose(in_file);
-}
-
-void Find_freq(){
-
-	Trie* node = Build_Trie("./Result/Contant.txt");
-    Frequence_Of_Word("./Result/output.txt",node,(char *)calloc(50,sizeof(char)),-1);
-
-}
 
 int main(int argc,char **argv){
 
@@ -150,6 +124,7 @@ int main(int argc,char **argv){
 	int check = mkdir("Result",0777);
 
 	char* Domain_name = argv[1];
+	//char* Domain_name = "www.google.com";
 
 	// convert domain name to ip address
 	char *ip = Domain_to_ip(Domain_name);
@@ -159,7 +134,6 @@ int main(int argc,char **argv){
 	int sockfd = Create_Tcp_Connection(ip);
 	if(sockfd == -1) return -1;
 
-
 	// sending request for webpage
 	Send_url_request(Domain_name,sockfd);
 
@@ -167,10 +141,10 @@ int main(int argc,char **argv){
 	Recv_HTML(sockfd);
 
 	// Extracting the data from html page
-	Remove_Tag();
+	Remove_Tag("./Result/Html_Page.html");
 
 	// finding the frequency of each word
-	Find_freq();
+	Find_freq("./Result/Contant.txt");
 	return 0;
 }
 
