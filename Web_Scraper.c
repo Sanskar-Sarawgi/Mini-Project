@@ -8,8 +8,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "Trie.h"
-#include "Filter.h"
+#include "./Header/Trie.h"
+#include "./Header/Filter.h"
+#include "./Header/Sort.h"
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1
@@ -144,7 +145,13 @@ int main(int argc,char **argv){
 	Remove_Tag("./Result/Html_Page.html");
 
 	// finding the frequency of each word
-	Find_freq("./Result/Contant.txt");
+	int Total_Word = Find_freq("./Result/Contant.txt");
+
+	//Rank the word acc to the frequency
+	Sort_file(Total_Word);
+
+	// close the socket
+	
 	return 0;
 }
 

@@ -73,10 +73,8 @@ Trie *Build_Trie(char *File_Name){
     return Node;
 }
 
-int Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
-    static FILE *out_file;
+int Frequence_Of_Word(FILE *out_file,Trie* head,char* word,int index){
     static int counter = 0;
-    if(out_file == NULL) out_file = fopen(File_Name, "w");
     
     if(!head) return 0;
     if(head->count > 0){
@@ -87,7 +85,7 @@ int Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
         if(head->node_list[i]){
             word[index+1] = 'a'+i;
             word[index+2] = '\0';
-            Frequence_Of_Word(File_Name,head->node_list[i],word,index+1);
+            Frequence_Of_Word(out_file,head->node_list[i],word,index+1);
             word[index+1] = '\0';
         }
     }
@@ -96,7 +94,9 @@ int Frequence_Of_Word(char *File_Name,Trie* head,char* word,int index){
 
 int Find_freq(char *Contant_file){
 
+    FILE *out_file = fopen("./Result/output.txt", "w");
 	Trie* node = Build_Trie(Contant_file);
-    return Frequence_Of_Word("./Result/output.txt",node,(char *)calloc(50,sizeof(char)),-1);
-
+    int n = Frequence_Of_Word(out_file,node,(char *)calloc(50,sizeof(char)),-1);
+    fclose(out_file);
+    return n;
 }

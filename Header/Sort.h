@@ -45,9 +45,5 @@ void Sort_file(int len){
     for(int n = 0 ; n < len; n++ ) {
         fprintf(out_file,"%s = %d \n",value[n].word, value[n].fre); 
     }
-}
-
-int main () {
-   Sort_file(21);
-   return(0);
+    fclose(out_file);
 }
