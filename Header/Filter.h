@@ -2,11 +2,11 @@
 
 char lower(char);
 
-void Remove_Tag(char *Html_file)
+void Remove_Tag(char *Html_file,char *result_file)
 {
 	// Opening file in reading mode
 	FILE *in_file = fopen(Html_file, "r");
-	FILE *out_file = fopen("./Result/Contant.txt", "w");
+	FILE *out_file = fopen(result_file, "w");
 
 	int temp;
 
@@ -18,10 +18,10 @@ void Remove_Tag(char *Html_file)
 		temp = fgetc(in_file);
 		if (word[j] == lower(temp))
 			j++;
-		else if (temp == ' ')
+		else if (temp == ' ')  // ignore the empty space between the word
 			;
 		else
-			j = 0;
+			j = 0;    // if the charater not found for a word we reset the pointer index to start
 		if (j == 5)
 			break;
 	}

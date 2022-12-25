@@ -12,6 +12,7 @@ typedef struct Trie
     struct Trie *node_list[MAX_CHAR];
 } Trie;
 
+// Convert the Upper char to lower char
 char lower(char ch)
 {
     if (ch >= 65 && ch <= 90)
@@ -19,6 +20,7 @@ char lower(char ch)
     return ch;
 }
 
+// check input is character => 1 or (Special char, Symbol, digit) => 0
 int is_char(char ch)
 {
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
@@ -26,6 +28,7 @@ int is_char(char ch)
     return 0;
 }
 
+// create Trie node using malloc 
 Trie *Create()
 {
     Trie *node = (Trie *)malloc(sizeof(Trie));
@@ -42,15 +45,19 @@ Trie *Insert(Trie *head, char *str, int len)
     Trie *temp = head;
     for (int i = 0; i < len; i++)
     {
-        int index = lower(str[i]) - 'a';
-        if (!temp->node_list[index])
+        int index = lower(str[i]) - 'a'; // converting char to index like a=0 , b=1 , c=2 ...
+
+        // if branch not created 
+        if (!temp->node_list[index]) 
         {
 
             temp->node_list[index] = Create();
         }
 
-        temp = temp->node_list[index];
+        temp = temp->node_list[index];  // move to the next node respect of the char or index
     }
+    
+    // incress the count of the word to find the frequency
     temp->count++;
     return head;
 }

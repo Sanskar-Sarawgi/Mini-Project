@@ -3,6 +3,11 @@
 #include <sys/stat.h>
 #include "./Header/Socket.h"
 
+#define Html_file "./Result/Html_Page.html"
+#define Contant_file "./Result/Contant.txt"
+#define Output_file "./Result/output.txt"
+
+
 int main(int argc, char **argv)
 {
 
@@ -16,7 +21,9 @@ int main(int argc, char **argv)
 	// init of the Result folder
 	int check = mkdir("Result", 0777);
 
-	char *Domain_name = argv[1];
+	char Domain_name[100];
+	char Page_name[100];
+	Break_Address(Domain_name,Page_name,argv[1]);
 	// char* Domain_name = "www.google.com";
 
 	// convert domain name to ip address
@@ -30,19 +37,19 @@ int main(int argc, char **argv)
 		return -1;
 
 	// sending request for webpage
-	Send_url_request(Domain_name, sockfd);
+	Send_url_request(Domain_name, sockfd ,Page_name);
 
 	// fetching html from server
 	Recv_HTML(sockfd);
 
 	// Extracting the data from html page
-	Remove_Tag("./Result/Html_Page.html");
+	Remove_Tag(Html_file,Contant_file);
 
 	// finding the frequency of each word
-	int Total_Word = Find_freq("./Result/Contant.txt","./Result/output.txt");
+	int Total_Word = Find_freq(Contant_file,Output_file);
 
 	// Rank the word acc to the frequency
-	Sort_file(Total_Word,"./Result/output.txt");
+	Sort_file(Total_Word,Output_file);
 
 	// close the socket
 	close(sockfd);
@@ -52,7 +59,7 @@ int main(int argc, char **argv)
 
 // ISSUE IN PROGRAM
 
-// ./a.out www.google.com    (http = working)
-// ./a.out www.geeksforgeeks.org (https = not working)
-// ./a.out www.testingmcafeesites.com/index (navigation to different page not working)
-// ./a.out www.testingmcafeesites.com 
+//1. www.google.com    (http = working)
+//   www.geeksforgeeks.org (https = not working)
+//2. www.testingmcafeesites.com/index (navigation to different page not working)
+//   www.testingmcafeesites.com
