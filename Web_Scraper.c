@@ -1,11 +1,12 @@
 #include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "./Header/Socket.h"
+#include "./Header/fetch.h"
 
 #define Html_file "./Result/Html_Page.html"
 #define Contant_file "./Result/Contant.txt"
 #define Output_file "./Result/output.txt"
+
 
 int main(int argc, char **argv)
 {
@@ -20,27 +21,33 @@ int main(int argc, char **argv)
 	// init of the Result folder
 	int check = mkdir("Result", 0777);
 
-	char Domain_name[100];
-	char Page_name[100];
-	Break_Address(Domain_name, Page_name, argv[1]);
-	// char* Domain_name = "www.google.com";
 
-	// convert domain name to ip address
-	char *ip = Domain_to_ip(Domain_name);
-	if (ip == NULL)
-		return -1;
+// for http only
+	// char Domain_name[100];
+	// char Page_name[100];
+	// Break_Address(Domain_name, Page_name, argv[1]);
+	// // char* Domain_name = "www.google.com";
 
-	// creating a tcp connection
-	int sockfd = Create_Tcp_Connection(ip);
-	if (sockfd == -1)
-		return -1;
+	// // convert domain name to ip address
+	// char *ip = Domain_to_ip(Domain_name);
+	// if (ip == NULL)
+	// 	return -1;
 
-	// sending request for webpage
-	Send_url_request(Domain_name, sockfd, Page_name);
+	// // creating a tcp connection
+	// int sockfd = Create_Tcp_Connection(ip);
+	// if (sockfd == -1)
+	// 	return -1;
 
-	// fetching html from server
-	Recv_HTML(sockfd);
+	// // sending request for webpage
+	// Send_url_request(Domain_name, sockfd, Page_name);
 
+	// // fetching html from server
+	// Recv_HTML(sockfd);
+
+// for https and http
+	fetch(argv[1]);
+
+// remaining process is same
 	// Extracting the data from html page
 	Remove_Tag(Html_file, Contant_file);
 
@@ -51,9 +58,9 @@ int main(int argc, char **argv)
 	Sort_file(Total_Word, Output_file);
 
 	// close the socket
-	close(sockfd);
-	printf("Socket Close\n");
-	
+	// close(sockfd);
+	// printf("Socket Close\n");
+
 	return 0;
 }
 

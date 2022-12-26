@@ -26,14 +26,16 @@ void Break_Address(char *Domain_name, char *Page_name, char *url)
 	int i = 0; // index of Domain name
 	int j = 0; // index of Page name
 	int Switch_flow = 1;
+	int block = 0;
 	for (int k = 0; url[k] != '\0'; k++)
 	{
-		if (url[k] == '/')
+		if (url[k] == '/' && !block)
 		{
 			Switch_flow = 0;
 			Domain_name[i] = '\0';
+			block=1;
 		}
-		else if (Switch_flow)
+		if (Switch_flow)
 		{ // add to the Domain_name
 			Domain_name[i++] = url[k];
 		}
