@@ -28,7 +28,7 @@ int is_char(char ch)
     return 0;
 }
 
-// create Trie node using malloc 
+// create Trie node using malloc
 Trie *Create()
 {
     Trie *node = (Trie *)malloc(sizeof(Trie));
@@ -47,16 +47,16 @@ Trie *Insert(Trie *head, char *str, int len)
     {
         int index = lower(str[i]) - 'a'; // converting char to index like a=0 , b=1 , c=2 ...
 
-        // if branch not created 
-        if (!temp->node_list[index]) 
+        // if branch not created
+        if (!temp->node_list[index])
         {
 
             temp->node_list[index] = Create();
         }
 
-        temp = temp->node_list[index];  // move to the next node respect of the char or index
+        temp = temp->node_list[index]; // move to the next node respect of the char or index
     }
-    
+
     // incress the count of the word to find the frequency
     temp->count++;
     return head;
@@ -118,7 +118,7 @@ int Frequence_Of_Word(FILE *out_file, Trie *head, char *word, int index)
     return counter;
 }
 
-int Find_freq(char *Contant_name,char *result_name)
+int Find_freq(char *Contant_name, char *result_name)
 {
 
     FILE *out_file = fopen(result_name, "w");

@@ -12,7 +12,7 @@ int cmpfunc(const void *a, const void *b)
     return (((node *)b)->fre - ((node *)a)->fre);
 }
 
-void Sort_file(int len,char *file_name)
+void Sort_file(int len, char *file_name)
 {
     node value[len];
     FILE *in_file = fopen(file_name, "r");

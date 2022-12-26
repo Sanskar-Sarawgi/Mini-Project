@@ -21,19 +21,25 @@
 #define NULL '\0'
 #endif
 
-void Break_Address(char* Domain_name,char* Page_name,char* url){
-	int i=0;  // index of Domain name
-	int j=0;  // index of Page name
+void Break_Address(char *Domain_name, char *Page_name, char *url)
+{
+	int i = 0; // index of Domain name
+	int j = 0; // index of Page name
 	int Switch_flow = 1;
-	for(int k=0;url[k]!='\0';k++){
-		if(url[k] == '/'){
+	for (int k = 0; url[k] != '\0'; k++)
+	{
+		if (url[k] == '/')
+		{
 			Switch_flow = 0;
 			Domain_name[i] = '\0';
 		}
-		else if(Switch_flow){  // add to the Domain_name
-		    Domain_name[i++] = url[k];
-		}else{   // add to the Page name
-		    Page_name[j++] = url[k];
+		else if (Switch_flow)
+		{ // add to the Domain_name
+			Domain_name[i++] = url[k];
+		}
+		else
+		{ // add to the Page name
+			Page_name[j++] = url[k];
 		}
 	}
 	Page_name[j] = '\0';
@@ -54,7 +60,7 @@ char *Domain_to_ip(char *Domain_name)
 
 	// it convert the internet address to ascii or representable formate
 	char *ip = inet_ntoa(*((struct in_addr *)ht->h_addr_list[0]));
-	printf("IP : %s \n",ip);
+	printf("IP : %s \n", ip);
 	// getting host ip address
 	return ip;
 }
@@ -86,7 +92,7 @@ int Create_Tcp_Connection(char *ip)
 	server_addr.sin_family = AF_INET;
 	// htons = convet host to network standard bit order
 	server_addr.sin_port = htons(portno);
-	inet_pton(AF_INET, ip, &(server_addr.sin_addr));  // vice versa of inet_ntoa()
+	inet_pton(AF_INET, ip, &(server_addr.sin_addr)); // vice versa of inet_ntoa()
 
 	// creating connection with server
 	if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
@@ -102,14 +108,14 @@ int Create_Tcp_Connection(char *ip)
 	return sockfd;
 }
 
-void Send_url_request(char *Domain_name, int sockfd,char *Page_name)
+void Send_url_request(char *Domain_name, int sockfd, char *Page_name)
 {
 
 	char header[Header_SIZE];
 	// creating header to send request to the server
 	// GET / HTTP/1.1
 	// Host: Domain_name
-	snprintf(header, Header_SIZE, "GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n",Page_name ,Domain_name);
+	snprintf(header, Header_SIZE, "GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n", Page_name, Domain_name);
 	printf("Header - %s\n", header);
 
 	// sending request to server
