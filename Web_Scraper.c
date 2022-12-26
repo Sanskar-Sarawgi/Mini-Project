@@ -61,5 +61,3 @@ int main(int argc, char **argv)
 
 //1. www.google.com    (http = working)
 //   www.geeksforgeeks.org (https = not working)
-//2. www.testingmcafeesites.com/index (navigation to different page not working)
-//   www.testingmcafeesites.com
