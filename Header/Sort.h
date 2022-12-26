@@ -47,9 +47,12 @@ void Sort_file(int len,char *file_name)
 
     fclose(in_file);
     FILE *out_file = fopen(file_name, "w");
+    fprintf(out_file, "|%-15s | %s|\n", "Word", "freq");
+    fprintf(out_file, "+----------------------+\n");
     for (int n = 0; n < len; n++)
     {
-        fprintf(out_file, "%s = %d \n", value[n].word, value[n].fre);
+        fprintf(out_file, "|%-15s | %3d |\n", value[n].word, value[n].fre);
     }
+    fprintf(out_file, "+----------------------+\n");
     fclose(out_file);
 }
