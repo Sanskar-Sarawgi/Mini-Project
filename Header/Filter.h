@@ -11,7 +11,7 @@ void Remove_Tag(char *Html_file,char *result_file)
 	int temp;
 
 	// find body in html
-	char *word = "<body";
+	char *word = "<body>";
 	int j = 0;
 	while (temp != EOF)
 	{
@@ -22,11 +22,13 @@ void Remove_Tag(char *Html_file,char *result_file)
 			;
 		else
 			j = 0;    // if the charater not found for a word we reset the pointer index to start
-		if (j == 5)
+		if (j == 6)
 			break;
 	}
 
-	int block = 1;
+	int block = 0;
+	word = "<script";
+	j = 0;
 	do
 	{
 		temp = fgetc(in_file);
@@ -34,12 +36,17 @@ void Remove_Tag(char *Html_file,char *result_file)
 		{ // starting of tag
 			while (temp != '>')
 			{
+				if(word[j] == lower(temp)) j++;
+				else if (temp == ' ') ;
+				else j = 0;
+				if (j == 7) block = !block;
 				temp = fgetc(in_file);
 			}
+			// ending of tag
 		}
 		else
 		{
-			fputc(temp, out_file);
+			if(!block) fputc(temp, out_file);
 		}
 
 		// Checking if character is not EOF.
