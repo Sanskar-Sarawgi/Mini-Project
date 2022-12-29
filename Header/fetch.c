@@ -4,7 +4,8 @@
 #include <openssl/err.h> /* errors */
 #include <openssl/ssl.h> /* core library */
 #include <string.h>
-#include "Socket.h"
+#include "Socket.c"
+#include "Buffer.c" // test
 
 #define BuffSize 1024
 
@@ -18,6 +19,7 @@ void report_and_exit(const char *msg)
 void init_ssl()
 {
   SSL_load_error_strings();
+  // registers the available SSL/TLS ciphers and digests.
   SSL_library_init();
 }
 
@@ -33,26 +35,26 @@ void secure_connect(const char *hostname, char *page)
   char request[BuffSize];
   char response[BuffSize];
 
-  const SSL_METHOD *method = TLSv1_2_client_method();
+  const SSL_METHOD *method = TLS_client_method();  // confi based on version
   if (NULL == method)
     report_and_exit("TLSv1_2_client_method...");
 
-  SSL_CTX *ctx = SSL_CTX_new(method);
+  SSL_CTX *ctx = SSL_CTX_new(method);  // return a token
   if (NULL == ctx)
     report_and_exit("SSL_CTX_new...");
 
-  BIO *bio = BIO_new_ssl_connect(ctx);
+  BIO *bio = BIO_new_ssl_connect(ctx);  // bio socket I/O
   if (NULL == bio)
     report_and_exit("BIO_new_ssl_connect...");
 
   SSL *ssl = NULL;
 
-  /* link bio channel, SSL session, and server endpoint */
+  // link bio channel, SSL session, and server endpoint
 
   sprintf(name, "%s:%s", hostname, "https");
-  BIO_get_ssl(bio, &ssl);                 /* session */
-  SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY); /* robustness */
-  BIO_set_conn_hostname(bio, name);       /* prepare to connect */
+  BIO_get_ssl(bio, &ssl);                 // session 
+  SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY); // robustness
+  BIO_set_conn_hostname(bio, name);       // prepare to connect by setting the host name
 
   /* try to connect */
   if (BIO_do_connect(bio) <= 0)
@@ -61,34 +63,39 @@ void secure_connect(const char *hostname, char *page)
     report_and_exit("BIO_do_connect...");
   }
 
-  /* verify truststore, check cert */
+  // verify truststore, check cert
   if (!SSL_CTX_load_verify_locations(ctx,
-                                     "/etc/ssl/certs/ca-certificates.crt", /* truststore */
-                                     "/etc/ssl/certs/"))                   /* more truststore */
+                                     "/etc/ssl/certs/ca-certificates.crt",
+                                     "/etc/ssl/certs/"))                   
     report_and_exit("SSL_CTX_load_verify_locations...");
 
   long verify_flag = SSL_get_verify_result(ssl);
   if (verify_flag != X509_V_OK)
     fprintf(stderr,
-            "##### Certificate verification error (%i) but continuing...\n",
+            "##### Certificate verification error (%i)\n",
             (int)verify_flag);
 
-  /* now fetch the homepage as sample data */
+  // now fetch the webpage
   sprintf(request,
-          "GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n",
-          page, hostname);
+          "GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n", // 1.0 is for getting one responce and end the connection
+          page, hostname);                                             // 1.1 is for getting many responce without ending server 
   BIO_puts(bio, request);
+  printf("Request Send to server \nWeb page loading to Result Folder\n");
 
   FILE *out_file = fopen("./Result/Html_Page.html", "w");
+  Buffer_node* contant = NULL;  // test
   while (1)
   {
     memset(response, '\0', sizeof(response));
     int n = BIO_read(bio, response, BuffSize);
-    if (n <= 0)
-      break; /* 0 is end-of-stream, < 0 is an error */
-    puts(response);
-    fprintf(out_file, "%s", response);
+    if (n <= 0)   // 0 is end-of-stream, < 0 is an error
+      break;
+    fprintf(out_file, "%s", response);  // add directly in buffer
+    contant=Add_buffer(response,contant); // test
   }
+  test(contant); // test
+  Free_list(contant); // test
+  printf("Fetch data completed\n");
   fclose(out_file);
   cleanup(ctx, bio);
 }

@@ -8,9 +8,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "Trie.h"
-#include "Filter.h"
-#include "Sort.h"
+#include "Trie.c"
+#include "Filter.c"
+#include "Sort.c"
 
 #define BUF_SIZE 4095
 #define BUF_SIZE_INC BUF_SIZE + 1

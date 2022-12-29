@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "./Header/fetch.h"
+#include "./Header/fetch.c"
 
 #define Html_file "./Result/Html_Page.html"
 #define Contant_file "./Result/Contant.txt"
@@ -48,6 +48,7 @@ int main(int argc, char **argv)
 	fetch(argv[1]);
 
 // remaining process is same
+    printf("Data is Processing ...\n");
 	// Extracting the data from html page
 	Remove_Tag(Html_file, Contant_file);
 
@@ -56,7 +57,7 @@ int main(int argc, char **argv)
 
 	// Rank the word acc to the frequency
 	Sort_file(Total_Word, Output_file);
-
+	printf("Data Processing Completed you can check the result in Result folder\n");
 	// close the socket
 	// close(sockfd);
 	// printf("Socket Close\n");
@@ -64,7 +65,9 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+// gcc Web_Scraper.c -lssl -lcrypto
 // ISSUE IN PROGRAM
 
-// 1. www.google.com    (http = working)
-//    www.geeksforgeeks.org (https = not working)
+// insted of use file to store the data store in buffer(ram)
+// In filter.c use generic function insted of writing in one line
+// use more efficent data structure then c

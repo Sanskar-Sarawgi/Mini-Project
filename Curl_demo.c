@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<unistd.h>
-#include "./Header/Trie.h"
-#include "./Header/Filter.h"
-#include "./Header/Sort.h"
+#include "./Header/Trie.c"
+#include "./Header/Filter.c"
+#include "./Header/Sort.c"
 #define Html_file "./Result/Html_Page.html"
 #define Contant_file "./Result/Contant.txt"
 #define Output_file "./Result/output.txt"
