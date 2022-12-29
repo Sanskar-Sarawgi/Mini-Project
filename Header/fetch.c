@@ -5,7 +5,7 @@
 #include <openssl/ssl.h> /* core library */
 #include <string.h>
 #include "Socket.c"
-#include "Buffer.c" // test
+//#include "Buffer.c" // test
 
 #define BuffSize 1024
 
@@ -83,7 +83,7 @@ void secure_connect(const char *hostname, char *page)
   printf("Request Send to server \nWeb page loading to Result Folder\n");
 
   FILE *out_file = fopen("./Result/Html_Page.html", "w");
-  Buffer_node* contant = NULL;  // test
+  //Buffer_node* contant = NULL;  // test
   while (1)
   {
     memset(response, '\0', sizeof(response));
@@ -91,10 +91,12 @@ void secure_connect(const char *hostname, char *page)
     if (n <= 0)   // 0 is end-of-stream, < 0 is an error
       break;
     fprintf(out_file, "%s", response);  // add directly in buffer
-    contant=Add_buffer(response,contant); // test
+   // contant=Add_buffer(response,contant); // test
   }
-  test(contant); // test
-  Free_list(contant); // test
+ // Cursor* cur = Create_Iterater(contant); // test
+  // int temp = Read_buffer(cur); // test
+  // test(contant); // test
+  // Free_list(contant); // test
   printf("Fetch data completed\n");
   fclose(out_file);
   cleanup(ctx, bio);

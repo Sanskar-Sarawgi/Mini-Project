@@ -22,6 +22,7 @@ Cursor* Create_Iterater(Buffer_node* node){
 
 Buffer_node* Create_Buffer(char *ch,int size){
     Buffer_node* ptr = (Buffer_node *)malloc(sizeof(Buffer_node));
+    printf("%d\n",size);
     ptr->para = ch;
     ptr->size = size;
     ptr->next = NULL;
@@ -34,10 +35,17 @@ int string_len(char *ch){
     return i;
 }
 
+int string_length(char *ch){
+    int i = 0;
+    while(ch[i] != '\0' && i < 1020){
+        i++;
+    }
+    return i;
+}
 
 // add paragraph in the node
 Buffer_node* Add_buffer(char* buff,Buffer_node* head){
-    int len = strlen(buff);
+    int len = string_length(buff);
     char *para = calloc(len,sizeof(char));
     strcpy(para,buff);
     if(head == NULL){
@@ -83,19 +91,28 @@ void test(Buffer_node* contant){
     Cursor* cur = Create_Iterater(contant);
     int temp = Read_buffer(cur);
     while(cur->head){
-        printf("%c \n",temp);
+        printf("%c",temp);
         temp = Read_buffer(cur);
     }
-    printf("next\n");
 }
 
 // int main(){
 //     char ch[100];
 //     Buffer_node* contant = NULL;
-//     for(int i=0;i<3;i++){
-//         scanf("%[^\n]%*c", ch);
+//     int temp;
+
+//     FILE *in_file = fopen("./Html_Page.html", "r");
+//     while(temp != EOF){
+//         int i = 0;
+//         temp = fgetc(in_file);
+//         while(temp != EOF && i < 98){
+//             ch[i++] = temp;
+//             temp = fgetc(in_file);
+//         }
+//         ch[i] = '\0';
 //         contant=Add_buffer(ch,contant);
 //     }
+//     fclose(in_file);
 //     test(contant);
 // }
 
