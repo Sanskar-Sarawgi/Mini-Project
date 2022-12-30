@@ -45,6 +45,7 @@ int main(int argc, char **argv)
 
 // for https and http
 	Buffer_node* Html_data = fetch(argv[1]);
+
 // remaining process is same
     printf("Data is Processing ...\n");
 	// Extracting the data from html page
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 
 	// finding the frequency of each word
 	int Total_Word = Find_freq(Contant_data, Output_file);
+	//Print(Contant_data);
 	Free_list(Contant_data);
 
 	// Rank the word acc to the frequency
