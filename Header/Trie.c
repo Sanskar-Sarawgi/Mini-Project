@@ -62,23 +62,22 @@ Trie *Insert(Trie *head, char *str, int len)
     return head;
 }
 
-Trie *Build_Trie(char *File_Name)
+Trie *Build_Trie(Buffer_node *Contant_data)
 {
-
-    FILE *in_file = fopen(File_Name, "r");
+    Cursor *cur = Create_Iterater(Contant_data);
     int temp;
     Trie *Node = NULL;
     do
     {
         char word[WORD_SIZE + 4];
         int len = 0;
-        temp = fgetc(in_file);
+        temp = Read_buffer(cur);
         while (is_char(temp))
         {
             word[len++] = temp;
             if (len > WORD_SIZE)
                 break; // limit the word size
-            temp = fgetc(in_file);
+            temp = Read_buffer(cur);
         }
 
         if (len > WORD_SIZE)
@@ -118,11 +117,11 @@ int Frequence_Of_Word(FILE *out_file, Trie *head, char *word, int index)
     return counter;
 }
 
-int Find_freq(char *Contant_name, char *result_name)
+int Find_freq(Buffer_node *Contant_data, char *result_name)
 {
 
     FILE *out_file = fopen(result_name, "w");
-    Trie *node = Build_Trie(Contant_name);
+    Trie *node = Build_Trie(Contant_data);
     int n = Frequence_Of_Word(out_file, node, (char *)calloc(50, sizeof(char)), -1);
     fclose(out_file);
     return n;

@@ -5,9 +5,8 @@
 #include <openssl/ssl.h> /* core library */
 #include <string.h>
 #include "Socket.c"
-//#include "Buffer.c" // test
 
-#define BuffSize 1024
+#define BuffSize 98
 
 void report_and_exit(const char *msg)
 {
@@ -29,7 +28,7 @@ void cleanup(SSL_CTX *ctx, BIO *bio)
   BIO_free_all(bio);
 }
 
-void secure_connect(const char *hostname, char *page)
+Buffer_node* secure_connect(const char *hostname, char *page)
 {
   char name[BuffSize];
   char request[BuffSize];
@@ -82,34 +81,29 @@ void secure_connect(const char *hostname, char *page)
   BIO_puts(bio, request);
   printf("Request Send to server \nWeb page loading to Result Folder\n");
 
-  FILE *out_file = fopen("./Result/Html_Page.html", "w");
-  //Buffer_node* contant = NULL;  // test
+  Buffer_node* Html_data = NULL;  // test
+
   while (1)
   {
     memset(response, '\0', sizeof(response));
     int n = BIO_read(bio, response, BuffSize);
     if (n <= 0)   // 0 is end-of-stream, < 0 is an error
       break;
-    fprintf(out_file, "%s", response);  // add directly in buffer
-   // contant=Add_buffer(response,contant); // test
+    Html_data = Add_buffer(response,Html_data); // test
   }
- // Cursor* cur = Create_Iterater(contant); // test
-  // int temp = Read_buffer(cur); // test
-  // test(contant); // test
-  // Free_list(contant); // test
   printf("Fetch data completed\n");
-  fclose(out_file);
   cleanup(ctx, bio);
+  return Html_data;
 }
 
-void fetch(char *hostname)
+Buffer_node* fetch(char *hostname)
 {
   init_ssl();
   char Domain_name[100];
   char Page_name[100];
   Break_Address(Domain_name, Page_name, hostname);
   fprintf(stderr, "Trying an HTTPS connection to %s%s...\n", Domain_name, Page_name);
-  secure_connect(Domain_name, Page_name);
+  return secure_connect(Domain_name, Page_name);
 }
 
 // gcc demo.c -lssl -lcrypto

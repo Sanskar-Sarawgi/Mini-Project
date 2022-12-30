@@ -1,10 +1,9 @@
 #include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "./Header/fetch.c"
+#include "./Header/Buffer.c"
+#include "./Header/Fetch.c"
 
-#define Html_file "./Result/Html_Page.html"
-#define Contant_file "./Result/Contant.txt"
 #define Output_file "./Result/output.txt"
 
 
@@ -45,15 +44,18 @@ int main(int argc, char **argv)
 	// Recv_HTML(sockfd);
 
 // for https and http
-	fetch(argv[1]);
-
+	Buffer_node* Html_data = fetch(argv[1]);
 // remaining process is same
     printf("Data is Processing ...\n");
 	// Extracting the data from html page
-	Remove_Tag(Html_file, Contant_file);
+
+	Buffer_node* Contant_data = NULL;
+	Contant_data  = Remove_Tag(Html_data, Contant_data);
+	Free_list(Html_data);
 
 	// finding the frequency of each word
-	int Total_Word = Find_freq(Contant_file, Output_file);
+	int Total_Word = Find_freq(Contant_data, Output_file);
+	Free_list(Contant_data);
 
 	// Rank the word acc to the frequency
 	Sort_file(Total_Word, Output_file);
@@ -68,6 +70,4 @@ int main(int argc, char **argv)
 // gcc Web_Scraper.c -lssl -lcrypto
 // ISSUE IN PROGRAM
 
-// insted of use file to store the data store in buffer(ram)
-// In filter.c use generic function insted of writing in one line
-// use more efficent data structure then c
+// use more efficent data structure then trie

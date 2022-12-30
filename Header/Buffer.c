@@ -11,18 +11,20 @@ typedef struct Buffer_node{
 typedef struct Cursor{
     Buffer_node* head;
     char position;
+    int temp_buff[10];
+    int top;
 }Cursor;
 
 Cursor* Create_Iterater(Buffer_node* node){
     Cursor* cur = (Cursor *)malloc(sizeof(Cursor));
     cur->head = node;
     cur->position = 0;
+    cur->top = -1;
     return cur;
 }
 
 Buffer_node* Create_Buffer(char *ch,int size){
     Buffer_node* ptr = (Buffer_node *)malloc(sizeof(Buffer_node));
-    printf("%d\n",size);
     ptr->para = ch;
     ptr->size = size;
     ptr->next = NULL;
@@ -37,7 +39,7 @@ int string_len(char *ch){
 
 int string_length(char *ch){
     int i = 0;
-    while(ch[i] != '\0' && i < 1020){
+    while(ch[i] != '\0' && i < 100){
         i++;
     }
     return i;
@@ -64,6 +66,9 @@ Buffer_node* Add_buffer(char* buff,Buffer_node* head){
 // reading function
 int Read_buffer(Cursor* cur){
     if(cur->head == NULL) return EOF;
+    if(cur->top >= 0){
+        return cur->temp_buff[(cur->top)--];
+    }
     if(cur->position >= cur->head->size){
         cur->head = cur->head->next;
         cur->position = 0;
@@ -85,9 +90,14 @@ void Free_list(Buffer_node* head){
     Free_Node(head);
 }
 
+void Unread_buffer(Cursor* cur,int ch){
+    if(cur->top >= 10) return ;
+    cur->top++;
+    cur->temp_buff[cur->top] = ch;
+}
 
-// Testing
-void test(Buffer_node* contant){
+
+void Print(Buffer_node* contant){
     Cursor* cur = Create_Iterater(contant);
     int temp = Read_buffer(cur);
     while(cur->head){
