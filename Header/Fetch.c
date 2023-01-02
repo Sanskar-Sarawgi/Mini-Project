@@ -4,9 +4,37 @@
 #include <openssl/err.h> /* errors */
 #include <openssl/ssl.h> /* core library */
 #include <string.h>
-#include "Socket.c"
+#include "Trie.c"
+#include "Filter.c"
+#include "Sort.c"
 
 #define BuffSize 98
+
+void Break_Address(char *Domain_name, char *Page_name, char *url)
+{
+	int i = 0; // index of Domain name
+	int j = 0; // index of Page name
+	int Switch_flow = 1;
+	int block = 0;
+	for (int k = 0; url[k] != '\0'; k++)
+	{
+		if (url[k] == '/' && !block)
+		{
+			Switch_flow = 0;
+			Domain_name[i] = '\0';
+			block=1;
+		}
+		if (Switch_flow)
+		{ // add to the Domain_name
+			Domain_name[i++] = url[k];
+		}
+		else
+		{ // add to the Page name
+			Page_name[j++] = url[k];
+		}
+	}
+	Page_name[j] = '\0';
+}
 
 void report_and_exit(const char *msg)
 {

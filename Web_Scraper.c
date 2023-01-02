@@ -1,8 +1,10 @@
 #include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "./Header/NRank.c"
 #include "./Header/Buffer.c"
 #include "./Header/Fetch.c"
+
 
 #define Output_file "./Result/output.txt"
 
@@ -55,9 +57,15 @@ int main(int argc, char **argv)
 	Free_list(Html_data);
 
 	// finding the frequency of each word
-	int Total_Word = Find_freq(Contant_data, Output_file);
+	Trie *Trie_node = Build_Trie(Contant_data);
+	int Total_Word = Find_freq(Trie_node, Output_file);
 	//Print(Contant_data);
 	Free_list(Contant_data);
+
+	// find Top N array
+	Contaner *cnt = Find_N_freq(Trie_node,10);
+	Print_Element(cnt);
+	Clear_Container(cnt);
 
 	// Rank the word acc to the frequency
 	Sort_file(Total_Word, Output_file);
