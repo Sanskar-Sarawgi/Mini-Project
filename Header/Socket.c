@@ -33,7 +33,7 @@ void Break_Address(char *Domain_name, char *Page_name, char *url)
 		{
 			Switch_flow = 0;
 			Domain_name[i] = '\0';
-			block=1;
+			block = 1;
 		}
 		if (Switch_flow)
 		{ // add to the Domain_name

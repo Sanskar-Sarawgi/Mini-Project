@@ -117,7 +117,7 @@ int Frequence_Of_Word(FILE *out_file, Trie *head, char *word, int index)
     return counter;
 }
 
-int Find_freq(Trie *Trie_node,char *result_name)
+int Find_freq(Trie *Trie_node, char *result_name)
 {
 
     FILE *out_file = fopen(result_name, "w");
@@ -131,7 +131,7 @@ void Frequence_Of_N_Word(Contaner *cnt, Trie *head, char *word, int index)
     static int counter = 0;
 
     if (!head)
-        return ;
+        return;
     if (head->count > 0)
     {
         Add_Element(word, head->count, cnt);
@@ -148,10 +148,9 @@ void Frequence_Of_N_Word(Contaner *cnt, Trie *head, char *word, int index)
     }
 }
 
-Contaner *Find_N_freq(Trie *Trie_node,int size)
+Contaner *Find_N_freq(Trie *Trie_node, int size)
 {
     Contaner *cnt = Create_Container(size);
     Frequence_Of_N_Word(cnt, Trie_node, (char *)calloc(50, sizeof(char)), -1);
     return cnt;
 }
-

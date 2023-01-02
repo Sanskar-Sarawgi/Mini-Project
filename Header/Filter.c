@@ -42,7 +42,7 @@ void Blocking(Cursor *cur, char *tag)
 		Unread_buffer(cur, temp);
 }
 
-Buffer_node * Remove_Tag(Buffer_node *Html_data, Buffer_node *Contant_data)
+Buffer_node *Remove_Tag(Buffer_node *Html_data, Buffer_node *Contant_data)
 {
 	// Opening file in reading mode
 	Cursor *cur = Create_Iterater(Html_data);

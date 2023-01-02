@@ -12,28 +12,28 @@
 
 void Break_Address(char *Domain_name, char *Page_name, char *url)
 {
-	int i = 0; // index of Domain name
-	int j = 0; // index of Page name
-	int Switch_flow = 1;
-	int block = 0;
-	for (int k = 0; url[k] != '\0'; k++)
-	{
-		if (url[k] == '/' && !block)
-		{
-			Switch_flow = 0;
-			Domain_name[i] = '\0';
-			block=1;
-		}
-		if (Switch_flow)
-		{ // add to the Domain_name
-			Domain_name[i++] = url[k];
-		}
-		else
-		{ // add to the Page name
-			Page_name[j++] = url[k];
-		}
-	}
-	Page_name[j] = '\0';
+  int i = 0; // index of Domain name
+  int j = 0; // index of Page name
+  int Switch_flow = 1;
+  int block = 0;
+  for (int k = 0; url[k] != '\0'; k++)
+  {
+    if (url[k] == '/' && !block)
+    {
+      Switch_flow = 0;
+      Domain_name[i] = '\0';
+      block = 1;
+    }
+    if (Switch_flow)
+    { // add to the Domain_name
+      Domain_name[i++] = url[k];
+    }
+    else
+    { // add to the Page name
+      Page_name[j++] = url[k];
+    }
+  }
+  Page_name[j] = '\0';
 }
 
 void report_and_exit(const char *msg)
@@ -56,21 +56,21 @@ void cleanup(SSL_CTX *ctx, BIO *bio)
   BIO_free_all(bio);
 }
 
-Buffer_node* secure_connect(const char *hostname, char *page)
+Buffer_node *secure_connect(const char *hostname, char *page)
 {
   char name[BuffSize];
   char request[BuffSize];
   char response[BuffSize];
 
-  const SSL_METHOD *method = TLS_client_method();  // confi based on version
+  const SSL_METHOD *method = TLS_client_method(); // confi based on version
   if (NULL == method)
     report_and_exit("TLSv1_2_client_method...");
 
-  SSL_CTX *ctx = SSL_CTX_new(method);  // return a token
+  SSL_CTX *ctx = SSL_CTX_new(method); // return a token
   if (NULL == ctx)
     report_and_exit("SSL_CTX_new...");
 
-  BIO *bio = BIO_new_ssl_connect(ctx);  // bio socket I/O
+  BIO *bio = BIO_new_ssl_connect(ctx); // bio socket I/O
   if (NULL == bio)
     report_and_exit("BIO_new_ssl_connect...");
 
@@ -79,7 +79,7 @@ Buffer_node* secure_connect(const char *hostname, char *page)
   // link bio channel, SSL session, and server endpoint
 
   sprintf(name, "%s:%s", hostname, "https");
-  BIO_get_ssl(bio, &ssl);                 // session 
+  BIO_get_ssl(bio, &ssl);                 // session
   SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY); // robustness
   BIO_set_conn_hostname(bio, name);       // prepare to connect by setting the host name
 
@@ -93,7 +93,7 @@ Buffer_node* secure_connect(const char *hostname, char *page)
   // verify truststore, check cert
   if (!SSL_CTX_load_verify_locations(ctx,
                                      "/etc/ssl/certs/ca-certificates.crt",
-                                     "/etc/ssl/certs/"))                   
+                                     "/etc/ssl/certs/"))
     report_and_exit("SSL_CTX_load_verify_locations...");
 
   long verify_flag = SSL_get_verify_result(ssl);
@@ -105,26 +105,26 @@ Buffer_node* secure_connect(const char *hostname, char *page)
   // now fetch the webpage
   sprintf(request,
           "GET /%s HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n", // 1.0 is for getting one responce and end the connection
-          page, hostname);                                             // 1.1 is for getting many responce without ending server 
+          page, hostname);                                             // 1.1 is for getting many responce without ending server
   BIO_puts(bio, request);
   printf("Request Send to server \nWeb page loading to Result Folder\n");
 
-  Buffer_node* Html_data = NULL;  // test
+  Buffer_node *Html_data = NULL; // test
 
   while (1)
   {
     memset(response, '\0', sizeof(response));
     int n = BIO_read(bio, response, BuffSize);
-    if (n <= 0)   // 0 is end-of-stream, < 0 is an error
+    if (n <= 0) // 0 is end-of-stream, < 0 is an error
       break;
-    Html_data = Add_buffer(response,Html_data); // test
+    Html_data = Add_buffer(response, Html_data); // test
   }
   printf("Fetch data completed\n");
   cleanup(ctx, bio);
   return Html_data;
 }
 
-Buffer_node* fetch(char *hostname)
+Buffer_node *fetch(char *hostname)
 {
   init_ssl();
   char Domain_name[100];

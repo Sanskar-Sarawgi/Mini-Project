@@ -19,7 +19,7 @@ typedef struct Contaner
 Contaner *Create_Container(int size)
 {
     Contaner *temp = (Contaner *)malloc(sizeof(Contaner));
-    temp->list = (Word_Node *)calloc(size+1, sizeof(Word_Node));
+    temp->list = (Word_Node *)calloc(size + 1, sizeof(Word_Node));
     for (int i = 0; i < size; i++)
         temp->list[i].fre = INT_MIN_VAL;
     temp->size = size;
@@ -34,7 +34,7 @@ void Add_Element(char *name, int fre, Contaner *cnt)
     Word_Node *temp = cnt->list;
     int index = cnt->size - 1;
 
-    //printf("Debug\n"); 
+    // printf("Debug\n");
     if (fre > temp[index].fre)
     {
         while (index >= 0)
@@ -48,15 +48,18 @@ void Add_Element(char *name, int fre, Contaner *cnt)
                 break;
             index--;
         }
-        temp[index+1].fre = fre;
-        strcpy(temp[index+1].name, name);
+        temp[index + 1].fre = fre;
+        strcpy(temp[index + 1].name, name);
     }
 }
 
-int Last_Index(Contaner *cnt){
+int Last_Index(Contaner *cnt)
+{
     int index = -1;
-    for(int i = 0 ;i < cnt->size;i++){
-        if(cnt->list[i].fre == INT_MIN_VAL) break;
+    for (int i = 0; i < cnt->size; i++)
+    {
+        if (cnt->list[i].fre == INT_MIN_VAL)
+            break;
         index++;
     }
     return index;
@@ -77,7 +80,8 @@ void Print_Element(Contaner *cnt)
     printf("+----------------------+\n");
 }
 
-void Clear_Container(Contaner *cnt){
+void Clear_Container(Contaner *cnt)
+{
     free(cnt->list);
     free(cnt);
 }

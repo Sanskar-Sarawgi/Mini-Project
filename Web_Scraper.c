@@ -5,9 +5,7 @@
 #include "./Header/Buffer.c"
 #include "./Header/Fetch.c"
 
-
 #define Output_file "./Result/output.txt"
-
 
 int main(int argc, char **argv)
 {
@@ -22,8 +20,7 @@ int main(int argc, char **argv)
 	// init of the Result folder
 	int check = mkdir("Result", 0777);
 
-
-// for http only
+	// for http only
 	// char Domain_name[100];
 	// char Page_name[100];
 	// Break_Address(Domain_name, Page_name, argv[1]);
@@ -45,25 +42,25 @@ int main(int argc, char **argv)
 	// // fetching html from server
 	// Recv_HTML(sockfd);
 
-// for https and http
-	Buffer_node* Html_data = fetch(argv[1]);
+	// for https and http
+	Buffer_node *Html_data = fetch(argv[1]);
 
-// remaining process is same
-    printf("Data is Processing ...\n");
+	// remaining process is same
+	printf("Data is Processing ...\n");
 	// Extracting the data from html page
 
-	Buffer_node* Contant_data = NULL;
-	Contant_data  = Remove_Tag(Html_data, Contant_data);
+	Buffer_node *Contant_data = NULL;
+	Contant_data = Remove_Tag(Html_data, Contant_data);
 	Free_list(Html_data);
 
 	// finding the frequency of each word
 	Trie *Trie_node = Build_Trie(Contant_data);
 	int Total_Word = Find_freq(Trie_node, Output_file);
-	//Print(Contant_data);
+	// Print(Contant_data);
 	Free_list(Contant_data);
 
 	// find Top N array
-	Contaner *cnt = Find_N_freq(Trie_node,10);
+	Contaner *cnt = Find_N_freq(Trie_node, 10);
 	Print_Element(cnt);
 	Clear_Container(cnt);
 
@@ -78,6 +75,10 @@ int main(int argc, char **argv)
 }
 
 // gcc Web_Scraper.c -lssl -lcrypto
+
+// Used following Webside for testing :-
+// 1. www.rfc-editor.org/rfc/rfc5246
+// 2. www.example.com
 // ISSUE IN PROGRAM
 
 // use more efficent data structure then trie
