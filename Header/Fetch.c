@@ -114,7 +114,7 @@ Buffer_node *secure_connect(const char *hostname, char *page)
   while (1)
   {
     memset(response, '\0', sizeof(response));
-    int n = BIO_read(bio, response, BuffSize);
+    int n = BIO_read(bio, response, BuffSize-1); // 112
     if (n <= 0) // 0 is end-of-stream, < 0 is an error
       break;
     Html_data = Add_buffer(response, Html_data); // test

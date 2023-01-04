@@ -79,6 +79,8 @@ int main(int argc, char **argv)
 // Used following Webside for testing :-
 // 1. www.rfc-editor.org/rfc/rfc5246
 // 2. www.example.com
+// time for i in {1..10}; do ./a.out www.rfc-editor.org/rfc/rfc5246; done;
+
 // ISSUE IN PROGRAM
 
 // use more efficent data structure then trie
